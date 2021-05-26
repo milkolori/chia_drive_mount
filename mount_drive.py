@@ -53,9 +53,9 @@ def get_all_drives():
     mntlines = blkid.split('\n')
     drives = [(
         line.split()[0], 
-        re.search('LABEL="(.+?)"', line).group(1),
-        re.search('TYPE="(.+?)"', line).group(1),
-        re.search('PARTUUID="(.+?)"', line).group(1)
+        re.search('LABEL="(.+?)"', line.split()[1]).group(1),
+        re.search('TYPE="(.+?)"', line.split()[2]).group(1),
+        re.search('PARTUUID="(.+?)"', line.split()[3]).group(1)
         ) for line in mntlines]
     return drives
 
@@ -86,7 +86,6 @@ def mount_new_drive():
 
 def main():
     mount_new_drive()
-
 
 if __name__ == '__main__':
     main()
