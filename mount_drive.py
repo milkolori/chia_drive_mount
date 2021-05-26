@@ -61,7 +61,7 @@ def get_all_drives():
     ) for line in mntlines if line.split()[1].startswith('LABEL')
         and line.split()[2].startswith('UUID')
         and line.split()[3].startswith('TYPE')]
-    log.debug(drives)
+    log.debug(f'All drives: {drives}')
     return drives
 
 
@@ -70,6 +70,7 @@ def get_all_mounted_drives_names():
     mntlines = mount.split('\n')
     drives = [(mount.split()[0], )
               for mount in mntlines if os.path.ismount(mount.split()[2])]
+    log.debug(f'Mounted dives: {drives}')
     return drives
 
 
