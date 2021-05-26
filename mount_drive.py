@@ -68,7 +68,7 @@ def get_all_drives():
 def get_all_mounted_drives_names():
     mount = subprocess.getoutput('mount -v')
     mntlines = mount.split('\n')
-    drives = [(mount.split()[0], )
+    drives = [mount.split()[0]
               for mount in mntlines if os.path.ismount(mount.split()[2])]
     log.debug(f'Mounted dives: {drives}')
     return drives
