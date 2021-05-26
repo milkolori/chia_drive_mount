@@ -5,4 +5,5 @@ log_level = DEBUG
 
 [env_params]
 chia_config_file = /home/pi/.chia/mainnet/config/config.yaml
+mount_drive_pattern = Lots_
 simulate = True

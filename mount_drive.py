@@ -8,7 +8,7 @@ from os.path import ismount, abspath, exists
 import string
 import subprocess
 import os
-
+import re
 
 __author__ = 'Milko Lorinkov'
 VERSION = "0.1 (2021-05-24)"
@@ -19,6 +19,7 @@ RECEIVE_FILE_PREFIX = 'copyTo'
 
 
 config_file_name = sys.argv[1:]
+mount_drive_pattern = read_config(config_file_name, 'env_params', 'mount_drive_pattern')
 is_simulation = read_config(config_file_name, 'env_params', 'simulate')
 
 setup_logging(config_file_name)
@@ -47,16 +48,27 @@ def check_chia_config_file():
         exit()
 
 
-def get_all_mounted_drives():
+def get_all_drives():
+    blkid = subprocess.getoutput('blkid')
+    mntlines = blkid.split('\n')
+    drives = [(
+        line.split()[0], 
+        re.search('LABEL="(.+?)"', line).group(1),
+        re.search('TYPE="(.+?)"', line).group(1),
+        re.search('PARTUUID="(.+?)"', line).group(1)
+        ) for line in mntlines]
+    return drives
+
+def get_all_mounted_drives_names():
     mount = subprocess.getoutput('mount -v')
     mntlines = mount.split('\n')
-    drives = [mount.split()[0] for mount in mntlines if os.path.ismount(mount.split()[2])]
+    drives = [(mount.split()[0], ) for mount in mntlines if os.path.ismount(mount.split()[2])]
     return drives
 
 def get_new_drive():
-    all_drives = sorted(glob('/dev/sd*'))#sd - TODO change
-    mounted_drives = get_all_mounted_drives()
-    unmounted_drives = list(filter(lambda drive: drive not in mounted_drives, all_drives))
+    all_drives = get_all_drives()
+    mounted_drive_names = get_all_mounted_drives_names()
+    unmounted_drives = list(filter(lambda drive: drive[0].startswith(mount_drive_pattern) and drive[0] not in mounted_drive_names, all_drives))
     if unmounted_drives:
         return sorted(unmounted_drives)[0]
     else:
@@ -69,7 +81,7 @@ def mount_new_drive():
     if new_drive:
         log.debug(f'New drive found {new_drive}')
     else:
-        log.debug(f'No new drives found. Will check again soon!')
+        log.debug(f'No new drives found that match the pattern {mount_drive_pattern}. Will check again soon!')
 
 
 def main():
