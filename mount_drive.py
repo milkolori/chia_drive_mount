@@ -52,11 +52,17 @@ def get_all_drives():
     blkid = subprocess.getoutput('blkid')
     mntlines = blkid.split('\n')
     drives = [(
-        line.split()[0], 
-        re.search('LABEL="(.+?)"', line.split()[1]).group(1),
-        re.search('TYPE="(.+?)"', line.split()[2]).group(1),
-        re.search('PARTUUID="(.+?)"', line.split()[3]).group(1)
+        line.split()[0],
+        line.split()[1],
+        line.split()[2],
+        line.split()[3],
+        line.split()[4] 
+        # re.search('LABEL="(.+?)"', line.split()[1]).group(1),
+        # re.search('UUID="(.+?)"', line.split()[2]).group(1),
+        # re.search('TYPE="(.+?)"', line.split()[3]).group(1),
+        # re.search('PARTUUID="(.+?)"', line.split()[4]).group(1)
         ) for line in mntlines]
+    log.debug(drives)
     return drives
 
 def get_all_mounted_drives_names():
