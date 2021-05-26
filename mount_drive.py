@@ -55,7 +55,7 @@ def get_all_drives():
     mntlines = blkid.split('\n')
     drives = [(
         line.split()[0],
-        re.search('LABEL="(.+?)"', line.split()[1]).group(1),
+        re.search('LABEL="(.+?):"', line.split()[1]).group(1),
         re.search('UUID="(.+?)"', line.split()[2]).group(1),
         re.search('TYPE="(.+?)"', line.split()[3]).group(1)
     ) for line in mntlines if line.split()[1].startswith('LABEL')
