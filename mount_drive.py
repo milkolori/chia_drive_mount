@@ -76,7 +76,7 @@ def get_all_mounted_drives_names():
 def get_new_drive():
     all_drives = get_all_drives()
     mounted_drive_names = get_all_mounted_drives_names()
-    unmounted_drives = list(filter(lambda drive: drive[0].startswith(
+    unmounted_drives = list(filter(lambda drive: drive[1].startswith(
         mount_drive_pattern) and drive[0] not in mounted_drive_names, all_drives))
     if unmounted_drives:
         return sorted(unmounted_drives)[0]
