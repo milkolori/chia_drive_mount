@@ -92,7 +92,7 @@ def mount_new_drive():
         log.debug(f'New drive found {new_drive}')
     else:
         log.debug(
-            f'No new drives found that match the pattern {mount_drive_pattern}. Will check again soon!')
+            f'No new drives found that match the pattern {red}{mount_drive_pattern}{nc}. Will check again soon!')
 
 
 def main():
